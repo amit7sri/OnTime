@@ -25,6 +25,7 @@ import com.amko0l.ontime.ontime.R;
 import com.amko0l.ontime.ontime.database.DataValues;
 import com.amko0l.ontime.ontime.database.OnTimeDB;
 import com.amko0l.ontime.ontime.receivers.Alarm_Receiver;
+
 import java.util.Calendar;
 import java.util.ArrayList;
 
@@ -38,31 +39,113 @@ public class AlarmActivity extends AppCompatActivity {
     Calendar calendar;
     Context context;
     PendingIntent pending_intent;
-	static SQLiteDatabase sqLiteDatabase;
+    static SQLiteDatabase sqLiteDatabase;
     OnTimeDB onTimeDB;
     final ArrayList<Integer> list = new ArrayList<Integer>();
-    AlarmManager[] alarmManager=new AlarmManager[24];
+    AlarmManager[] alarmManager = new AlarmManager[24];
     ArrayList<PendingIntent> intentArray = new ArrayList<PendingIntent>();
+    Intent alarm_intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+        String frompd = intent.getStringExtra("notification");
+        Log.d("Amit", "frompd " +frompd);
+        if ("yes".equals(frompd)) {
+            stopAlarm();
+            Intent intent1 = new Intent(this, MapActivity.class);
+            startActivity(intent1);
+        }
+
         setContentView(R.layout.alarm_activity);
         this.context = this;
-		alarm_manager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarm_manager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarm_timepicker = (TimePicker) findViewById(R.id.timePicker);
 
         onTimeDB = new OnTimeDB(this, "OnTimeDB", null, 1);
         sqLiteDatabase = onTimeDB.getWritableDatabase();
-    //initialise intent
-        final Intent alarm_intent = new Intent(this.context,Alarm_Receiver.class);
-    //initialise our timepicker
+        //initialise intent
+         alarm_intent = new Intent(this.context, Alarm_Receiver.class);
+        //initialise our timepicker
         alarm_timepicker = (TimePicker) findViewById(R.id.timePicker);
-    //create an instance of calendar
+        //create an instance of calendar
         final Calendar calendar = Calendar.getInstance();
-    //Initialise the start alarm button
         Button start_alarm = (Button) findViewById(R.id.start_alarm);
-    //Initialise days selection
+
+        //Create an onClick listener to start the alarm
+        start_alarm.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                //setting calendar instance with the hour and minute that we have picked
+                //on the time picker
+                calendar.set(Calendar.HOUR_OF_DAY, alarm_timepicker.getHour());
+                calendar.set(Calendar.MINUTE, alarm_timepicker.getMinute());
+
+                //get the string values of the hour and minute
+                int hour = alarm_timepicker.getHour();
+                int minute = alarm_timepicker.getMinute();
+
+                //convert the int values to string
+                String hour_string = String.valueOf(hour);
+                String minute_string = String.valueOf(minute);
+
+                //convert 24 hour time to 12 hour time
+                if (hour > 12){
+                    hour_string = String.valueOf(hour - 12);
+                }
+
+                if (minute < 10) {
+                    //10:7 -> 10:07
+                    minute_string = "0" + String.valueOf(minute);
+                }
+
+                //put in extra string into alarm_intent
+                //tells the clock that you put the alarm on button
+                alarm_intent.putExtra("extra","Alarm on");
+
+
+                //create a pendig intent that delays the intent
+                //until the specified calendar time
+                pending_intent =  PendingIntent.getBroadcast(AlarmActivity.this, 0, alarm_intent,
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+
+                //set the alarm manager
+                alarm_manager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                        pending_intent);
+
+
+            }
+        });
+
+        //initialise the end alarm button
+        Button end_alarm = (Button) findViewById(R.id.end_alarm);
+
+        //Create an onClick listener to turn off the alarm
+
+        end_alarm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //cancel the alarm
+                alarm_manager.cancel(pending_intent);
+
+                //put extra string into alarm_intent
+                //tells the clock that you pressed "end_alarm" button
+                alarm_intent.putExtra("extra", "Alarm off");
+
+                //stop alarm
+                sendBroadcast(alarm_intent);
+                Intent intent1 = new Intent(AlarmActivity.this, MapActivity.class);
+                startActivity(intent1);
+            }
+
+        });
+
+        //Initialise days selection
         CheckBox monday = (CheckBox) findViewById(R.id.monday);
         CheckBox tuesday = (CheckBox) findViewById(R.id.tuesday);
         CheckBox wednesday = (CheckBox) findViewById(R.id.wednesday);
@@ -72,7 +155,7 @@ public class AlarmActivity extends AppCompatActivity {
         monday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                switch(buttonView.getId()){
+                switch (buttonView.getId()) {
                     case R.id.monday:
                         list.add(1);
                         break;
@@ -88,86 +171,64 @@ public class AlarmActivity extends AppCompatActivity {
                     case R.id.friday:
                         list.add(5);
                         break;
-                 }
+                }
             }
         });
     }
 
-    //Create an onClick listener to start the alarm
-        /*start_alarm.setOnClickListener(new View.OnClickListener() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Intent intent = getIntent();
+        String frompd = intent.getStringExtra("notification");
+        Log.d("Amit", "frompd " +frompd);
+        if ("yes".equals(frompd)) {
+            stopAlarm();
+            Intent intent1 = new Intent(this, MapActivity.class);
+            startActivity(intent1);
+        }
+    }
 
-            @Override
-            public void onClick(View v) {
+    private void stopAlarm(){
+        for(int i=0;i<list.size();i++){
+            alarmManager[i].cancel(intentArray.get(i));
+            alarm_intent.putExtra("extra", "Alarm off");
+            sendBroadcast(alarm_intent);
+        }
+    }
 
-                //setting calendar instance with the hour and minute that we have picked
-                //on the time picker
-                calendar.set(Calendar.DAY_OF_WEEK, calendar.get(Calendar.DAY_OF_WEEK));
-                calendar.set(Calendar.HOUR_OF_DAY, alarm_timepicker.getHour());
-                calendar.set(Calendar.MINUTE, alarm_timepicker.getMinute());
+    public void onSave(View v) {
+        EditText classname_text = (EditText) findViewById(R.id.classname);
+        String classname = classname_text.getText().toString();
 
-                //get the string values of the hour and minute
-                int hour = alarm_timepicker.getHour();
-                int minute = alarm_timepicker.getMinute();
-
-                //convert the int values to string
-                String hour_string = String.valueOf(hour);
-                String minute_string = String.valueOf(minute);
-                //convert 24 hour time to 12 hour time
-                if (hour > 12){
-                    hour_string = String.valueOf(hour - 12);
-                }
-
-                if (minute < 10) {
-                    //10:7 -> 10:07
-                    minute_string = "0" + String.valueOf(minute);
-                }
-
-
-                for(int f=0;f<list.size();f++){
-
-                    Intent intent = new Intent(context, Alarm_Receiver.class);
-                    intent.putExtra("extra","Alarm on");
-                    pending_intent=PendingIntent.getBroadcast(AlarmActivity.this, f,intent, 0);
-                    alarmManager[f] = (AlarmManager) getSystemService(ALARM_SERVICE);
-                    alarmManager[f].setInexactRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),(AlarmManager.INTERVAL_DAY*7),pending_intent);
-                    intentArray.add(pending_intent);
-
-                }
-            }
-        });*/
-
-        public void onSave(View v) {
-            EditText classname_text = (EditText) findViewById(R.id.classname);
-            String classname = classname_text.getText().toString();
-
-            calendar = Calendar.getInstance();
-            calendar.set(Calendar.HOUR_OF_DAY, alarm_timepicker.getHour());
-            calendar.set(Calendar.MINUTE, alarm_timepicker.getMinute());
-            int hour = alarm_timepicker.getHour();
-            int minute = alarm_timepicker.getMinute();
-            String hour_string = String.valueOf(hour);
-            String minute_string = String.valueOf(minute);
-            //convert 24 hour time to 12 hour time
-            if (hour > 12) {
-                hour_string = String.valueOf(hour - 12);
-            }
-            if (minute < 10) {
-                minute_string = "0" + String.valueOf(minute);
-            }
-
-            Intent alarm_intent = new Intent(context, Alarm_Receiver.class);
-            alarm_intent.putExtra("extra", "Alarm on");
-            pending_intent = PendingIntent.getBroadcast(AlarmActivity.this, 0, alarm_intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            alarm_manager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pending_intent);
-            Switch switchButton = (Switch) findViewById(R.id.switchbutton);
-
-            DataValues eventData = new DataValues(classname, hour_string, minute_string, switchButton.isChecked());
-            Log.d("SAGAR", "ClassName :" + classname + " Alarm Time: " + hour_string + ":" + minute_string + "   Preference:" + switchButton.isChecked());
-            OnTimeDB.insertIntoDB(sqLiteDatabase);
-            super.onBackPressed();
+        calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, alarm_timepicker.getHour());
+        calendar.set(Calendar.MINUTE, alarm_timepicker.getMinute());
+        int hour = alarm_timepicker.getHour();
+        int minute = alarm_timepicker.getMinute();
+        String hour_string = String.valueOf(hour);
+        String minute_string = String.valueOf(minute);
+        //convert 24 hour time to 12 hour time
+        if (hour > 12) {
+            hour_string = String.valueOf(hour - 12);
+        }
+        if (minute < 10) {
+            minute_string = "0" + String.valueOf(minute);
         }
 
-        //Create an onClick listener to turn off the alarm
+        //Intent alarm_intent = new Intent(context, Alarm_Receiver.class);
+        alarm_intent.putExtra("extra", "Alarm on");
+        pending_intent = PendingIntent.getBroadcast(AlarmActivity.this, 0, alarm_intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        alarm_manager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pending_intent);
+        Switch switchButton = (Switch) findViewById(R.id.switchbutton);
+
+        DataValues eventData = new DataValues(classname, hour_string, minute_string, switchButton.isChecked());
+        Log.d("SAGAR", "ClassName :" + classname + " Alarm Time: " + hour_string + ":" + minute_string + "   Preference:" + switchButton.isChecked());
+        OnTimeDB.insertIntoDB(sqLiteDatabase);
+        super.onBackPressed();
+    }
+
+    //Create an onClick listener to turn off the alarm
 
 /*     Map   end_alarm.setOnClickListener(new View.OnClickListener() {
             Intent alarm_intent = new Intent(context,Alarm_Receiver.class);
@@ -192,7 +253,6 @@ public class AlarmActivity extends AppCompatActivity {
             }
 
         });*/
-
 
 
 }

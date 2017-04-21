@@ -47,7 +47,8 @@ public class RingtonePlayingService extends Service {
         NotificationManager notification_manager = (NotificationManager)
                 getSystemService(NOTIFICATION_SERVICE);
         //setup an intent that goes to the Main Activity.
-        Intent intent_main_activity = new Intent(this.getApplicationContext(), MapActivity.class);
+        Intent intent_main_activity = new Intent(this.getApplicationContext(), AlarmActivity.class);
+        intent.putExtra("notification","yes");
 
         //setup a pending intent
         PendingIntent pending_intent_main_activity = PendingIntent.getActivity(this, 0,
