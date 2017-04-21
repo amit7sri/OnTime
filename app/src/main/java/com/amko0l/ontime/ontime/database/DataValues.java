@@ -6,10 +6,10 @@ package com.amko0l.ontime.ontime.database;
 
 public class DataValues {
     static String className;
-    double src_lat;
-    double src_long;
-    double dest_lat;
-    double dest_long;
+    String src_lat;
+    static String src_long;
+    static String dest_lat;
+    static String dest_long;
     int mode;
     long time;
     static String hour;
@@ -22,6 +22,11 @@ public class DataValues {
         this.minutes = min;
         this.coffee = preference;
     }
+
+    public DataValues(){
+
+    }
+
     public static String getClassName() {
         return className;
     }
@@ -57,35 +62,35 @@ public class DataValues {
 
 
 
-    public double getSrc_lat() {
+    public String getSrc_lat() {
         return src_lat;
     }
 
-    public void setSrc_lat(double src_lat) {
+    public void setSrc_lat(String src_lat) {
         this.src_lat = src_lat;
     }
 
-    public double getSrc_long() {
+    public static String getSrc_long() {
         return src_long;
     }
 
-    public void setSrc_long(double src_long) {
+    public void setSrc_long(String src_long) {
         this.src_long = src_long;
     }
 
-    public double getDest_lat() {
+    public static String getDest_lat() {
         return dest_lat;
     }
 
-    public void setDest_lat(double dest_lat) {
+    public void setDest_lat(String dest_lat) {
         this.dest_lat = dest_lat;
     }
 
-    public double getDest_long() {
+    public static String getDest_long() {
         return dest_long;
     }
 
-    public void setDest_long(double dest_long) {
+    public void setDest_long(String dest_long) {
         this.dest_long = dest_long;
     }
 

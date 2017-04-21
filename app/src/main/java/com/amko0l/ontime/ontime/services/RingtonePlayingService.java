@@ -120,7 +120,6 @@ public class RingtonePlayingService extends Service {
         Log.e("MyActivity", "In the service");
 
         return START_NOT_STICKY;
-
     }
 
     @Override

@@ -7,20 +7,6 @@
     android:padding="16dp"
     tools:context=".ui.MapActivity">
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/gotoLoc"
-        android:layout_gravity="center_horizontal"
-        android:hint="Where do you want to go?"/>
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Go"
-        android:onClick="geoLocate"
-        android:layout_gravity="center_horizontal"/>
-
     <fragment
         android:id="@+id/mapfragment"
         android:name="com.google.android.gms.maps.MapFragment"

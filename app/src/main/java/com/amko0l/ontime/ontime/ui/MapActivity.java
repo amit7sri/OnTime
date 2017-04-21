@@ -53,7 +53,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         markerPoints = new ArrayList<LatLng>();
 
         if (isGoogleServiceAvailable()) {
-            Toast.makeText(this, "Perferct ", Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "Perferct ", Toast.LENGTH_LONG).show();
             setContentView(R.layout.activity_map);
             initMap();
         } else {
@@ -84,7 +84,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
 
-        //gotoLocation(33.417580, -111.934293, 15);
+        gotoLocation(33.417580, -111.934293, 15);
 
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -96,7 +96,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        //mGoogleMap.setMyLocationEnabled(true);
+        mGoogleMap.setMyLocationEnabled(true);
         mGoogleApiClient = new GoogleApiClient.Builder(this).addApi(LocationServices.API)
                 .addConnectionCallbacks(this).addOnConnectionFailedListener(this).build();
         mGoogleApiClient.connect();
@@ -134,7 +134,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
 
-    public void geoLocate(View view) {
+/*    public void geoLocate(View view) {
         EditText getLoc = (EditText) findViewById(R.id.gotoLoc);
         String location = getLoc.getText().toString();
         Geocoder gc = new Geocoder(this);
@@ -153,7 +153,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         MarkerOptions options = new MarkerOptions().title(locality).position(new LatLng(address.getLatitude(), address.getLongitude()));
 
         mGoogleMap.addMarker(options);
-    }
+    }*/
 
     LocationRequest mLocationRequest;
 

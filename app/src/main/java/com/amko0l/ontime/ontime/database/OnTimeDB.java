@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import static com.amko0l.ontime.ontime.database.GlobalConstants.CREATE_TABLE;
 import static com.amko0l.ontime.ontime.database.GlobalConstants.ClassName;
 import static com.amko0l.ontime.ontime.database.GlobalConstants.DELETE_TABLE;
+import static com.amko0l.ontime.ontime.database.GlobalConstants.DestLat;
+import static com.amko0l.ontime.ontime.database.GlobalConstants.DestLng;
 import static com.amko0l.ontime.ontime.database.GlobalConstants.Hour;
 import static com.amko0l.ontime.ontime.database.GlobalConstants.Minute;
 import static com.amko0l.ontime.ontime.database.GlobalConstants.Preference;
@@ -47,9 +49,10 @@ public class OnTimeDB extends SQLiteOpenHelper {
     public static void insertIntoDB(SQLiteDatabase db) {
         ContentValues values = new ContentValues();
 
-
+        values.put(DestLat,DataValues.getDest_lat());
         values.put(Hour, DataValues.getHour());
         values.put(ClassName, DataValues.getClassName());
+        values.put(DestLng, DataValues.getDest_long());
         values.put(Preference,DataValues.getPreference());
         values.put(Minute, DataValues.getMin());
 
