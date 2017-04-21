@@ -117,7 +117,6 @@ public class LaunchActivity extends AppCompatActivity {
 
     LocationManager mLocationManager;
 
-
     private Location getLastKnownLocation() {
         mLocationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
         List<String> providers = mLocationManager.getProviders(true);

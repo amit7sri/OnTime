@@ -75,51 +75,51 @@ public class AlarmActivity extends AppCompatActivity {
         Button start_alarm = (Button) findViewById(R.id.start_alarm);
 
         //Create an onClick listener to start the alarm
-        start_alarm.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                //setting calendar instance with the hour and minute that we have picked
-                //on the time picker
-                calendar.set(Calendar.HOUR_OF_DAY, alarm_timepicker.getHour());
-                calendar.set(Calendar.MINUTE, alarm_timepicker.getMinute());
-
-                //get the string values of the hour and minute
-                int hour = alarm_timepicker.getHour();
-                int minute = alarm_timepicker.getMinute();
-
-                //convert the int values to string
-                String hour_string = String.valueOf(hour);
-                String minute_string = String.valueOf(minute);
-
-                //convert 24 hour time to 12 hour time
-                if (hour > 12){
-                    hour_string = String.valueOf(hour - 12);
-                }
-
-                if (minute < 10) {
-                    //10:7 -> 10:07
-                    minute_string = "0" + String.valueOf(minute);
-                }
-
-                //put in extra string into alarm_intent
-                //tells the clock that you put the alarm on button
-                alarm_intent.putExtra("extra","Alarm on");
-
-
-                //create a pendig intent that delays the intent
-                //until the specified calendar time
-                pending_intent =  PendingIntent.getBroadcast(AlarmActivity.this, 0, alarm_intent,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
-
-                //set the alarm manager
-                alarm_manager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                        pending_intent);
-
-
-            }
-        });
+//        start_alarm.setOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//
+//                //setting calendar instance with the hour and minute that we have picked
+//                //on the time picker
+//                calendar.set(Calendar.HOUR_OF_DAY, alarm_timepicker.getHour());
+//                calendar.set(Calendar.MINUTE, alarm_timepicker.getMinute());
+//
+//                //get the string values of the hour and minute
+//                int hour = alarm_timepicker.getHour();
+//                int minute = alarm_timepicker.getMinute();
+//
+//                //convert the int values to string
+//                String hour_string = String.valueOf(hour);
+//                String minute_string = String.valueOf(minute);
+//
+//                //convert 24 hour time to 12 hour time
+//                if (hour > 12){
+//                    hour_string = String.valueOf(hour - 12);
+//                }
+//
+//                if (minute < 10) {
+//                    //10:7 -> 10:07
+//                    minute_string = "0" + String.valueOf(minute);
+//                }
+//
+//                //put in extra string into alarm_intent
+//                //tells the clock that you put the alarm on button
+//                alarm_intent.putExtra("extra","Alarm on");
+//
+//
+//                //create a pendig intent that delays the intent
+//                //until the specified calendar time
+//                pending_intent =  PendingIntent.getBroadcast(AlarmActivity.this, 0, alarm_intent,
+//                        PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//                //set the alarm manager
+//                alarm_manager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+//                        pending_intent);
+//
+//
+//            }
+//        });
 
         //initialise the end alarm button
         Button end_alarm = (Button) findViewById(R.id.end_alarm);
@@ -253,6 +253,4 @@ public class AlarmActivity extends AppCompatActivity {
             }
 
         });*/
-
-
 }

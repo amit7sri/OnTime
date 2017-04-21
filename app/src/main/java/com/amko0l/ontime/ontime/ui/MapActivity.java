@@ -1,15 +1,21 @@
 package com.amko0l.ontime.ontime.ui;
 
+import android.Manifest;
 import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amko0l.ontime.ontime.R;
+import com.amko0l.ontime.ontime.database.DataValues;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -63,7 +70,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
-
     private void initMap() {
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.mapfragment);
         mapFragment.getMapAsync(this);
@@ -104,24 +110,56 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 .addConnectionCallbacks(this).addOnConnectionFailedListener(this).build();
         mGoogleApiClient.connect();
 
+        Location myLocation = getLastKnownLocation();
+        DataValues dv = new DataValues();
+        Log.d("Amit", "map activity is " + dv + "  " + myLocation);
+        LatLng latLngsrc = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+        markerPoints.add(latLngsrc);
+
         LatLng latlngcoffee = new LatLng(33.3957792, -111.9230301);
         LatLng latlngcoor = new LatLng(33.4193643, -111.9396468);
         markerPoints.add(latlngcoffee);
         markerPoints.add(latlngcoor);
 
         // Creating MarkerOptions
+        MarkerOptions options = new MarkerOptions();
         MarkerOptions options1 = new MarkerOptions();
         MarkerOptions options2 = new MarkerOptions();
 
         // Setting the position of the marker
+        options.position(latLngsrc);
         options1.position(latlngcoffee);
         options2.position(latlngcoor);
 
+        options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
         options1.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
         options2.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
 
+        mGoogleMap.addMarker(options);
         mGoogleMap.addMarker(options1);
         mGoogleMap.addMarker(options2);
+        showDialog();
+
+    }
+
+    private void showDialog(){
+        new AlertDialog.Builder(MapActivity.this)
+                .setTitle("Time to reach destination")
+                .setMessage("Bike: " +   "\n" + "Walk: " +  "\n" + "Car: ")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue with delete
+
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                        finish();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
     private void gotoLocation(double lat, double lng) {
@@ -136,27 +174,33 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mGoogleMap.moveCamera(cameraUpdate);
     }
 
-
-/*    public void geoLocate(View view) {
-        EditText getLoc = (EditText) findViewById(R.id.gotoLoc);
-        String location = getLoc.getText().toString();
-        Geocoder gc = new Geocoder(this);
-        List<Address> list = null;
-        try {
-            list = gc.getFromLocationName(location, 1);
-        } catch (IOException e) {
-            e.printStackTrace();
+    LocationManager mLocationManager;
+    private Location getLastKnownLocation() {
+        mLocationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
+        List<String> providers = mLocationManager.getProviders(true);
+        Location bestLocation = null;
+        for (String provider : providers) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return null;
+            }
+            Location l = mLocationManager.getLastKnownLocation(provider);
+            if (l == null) {
+                continue;
+            }
+            if (bestLocation == null || l.getAccuracy() < bestLocation.getAccuracy()) {
+                // Found best last known location: %s", l);
+                bestLocation = l;
+            }
         }
-        Address address = list.get(0);
-        String locality = address.getLocality();
-        Toast.makeText(this, locality, Toast.LENGTH_SHORT).show();
-
-        //gotoLocation(address.getLatitude(), address.getLongitude());
-        //gotoLocation(address.getLatitude(), address.getLongitude(), 15);
-        MarkerOptions options = new MarkerOptions().title(locality).position(new LatLng(address.getLatitude(), address.getLongitude()));
-
-        mGoogleMap.addMarker(options);
-    }*/
+        return bestLocation;
+    }
 
     LocationRequest mLocationRequest;
 

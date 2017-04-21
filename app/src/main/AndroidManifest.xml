@@ -37,8 +37,8 @@
 
         </activity>
 
-        <activity android:name=".ui.MapActivity">
-
+        <activity android:name=".ui.MapActivity"
+            android:theme="@style/Theme.AppCompat">
         </activity>
 
         <receiver android:name=".receivers.Alarm_Receiver" />
