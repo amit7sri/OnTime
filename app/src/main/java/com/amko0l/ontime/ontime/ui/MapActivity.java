@@ -37,6 +37,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+
+
 /**
  * Created by amko0l on 4/20/2017.
  */
@@ -60,6 +62,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             Toast.makeText(this, "Can't connect to play services ", Toast.LENGTH_LONG).show();
         }
     }
+
 
     private void initMap() {
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.mapfragment);

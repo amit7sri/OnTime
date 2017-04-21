@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.amko0l.ontime.ontime.MainActivity;
 import com.amko0l.ontime.ontime.R;
 import com.amko0l.ontime.ontime.ui.AlarmActivity;
+import com.amko0l.ontime.ontime.ui.MapActivity;
 
 
 public class RingtonePlayingService extends Service {
@@ -46,7 +47,7 @@ public class RingtonePlayingService extends Service {
         NotificationManager notification_manager = (NotificationManager)
                 getSystemService(NOTIFICATION_SERVICE);
         //setup an intent that goes to the Main Activity.
-        Intent intent_main_activity = new Intent(this.getApplicationContext(), AlarmActivity.class);
+        Intent intent_main_activity = new Intent(this.getApplicationContext(), MapActivity.class);
 
         //setup a pending intent
         PendingIntent pending_intent_main_activity = PendingIntent.getActivity(this, 0,
@@ -54,6 +55,7 @@ public class RingtonePlayingService extends Service {
 
         //make the notification parameter
         Notification notification_popup = new Notification.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle("Alarm is going off")
                 .setContentText("click me!")
                 .setContentIntent(pending_intent_main_activity)
@@ -61,7 +63,7 @@ public class RingtonePlayingService extends Service {
                 .build();
 
         //set up notification call command
-        // notification_manager.notify(0, notification_popup);
+        notification_manager.notify(0, notification_popup);
 
 
         //intent string to state id
