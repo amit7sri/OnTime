@@ -24,6 +24,10 @@ import android.widget.Toast;
 
 import com.amko0l.ontime.ontime.R;
 import com.amko0l.ontime.ontime.database.DataValues;
+import com.directions.route.Route;
+import com.directions.route.RouteException;
+import com.directions.route.Routing;
+import com.directions.route.RoutingListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -55,6 +59,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     GoogleApiClient mGoogleApiClient;
     ArrayList<LatLng> markerPoints;
     Location curreLocation;
+    String walktext;
+    String biketext;
+    LatLng src;
+    LatLng dest;
+    LatLng latLngcoffee;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,13 +122,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         Location myLocation = getLastKnownLocation();
         DataValues dv = new DataValues();
         Log.d("Amit", "map activity is " + dv + "  " + myLocation);
-        LatLng latLngsrc = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
-        markerPoints.add(latLngsrc);
+        src = new LatLng(myLocation.getLatitude(), myLocation.getLongitude());
+        markerPoints.add(src);
 
-        LatLng latlngcoffee = new LatLng(33.3957792, -111.9230301);
-        LatLng latlngcoor = new LatLng(33.4193643, -111.9396468);
-        markerPoints.add(latlngcoffee);
-        markerPoints.add(latlngcoor);
+        latLngcoffee = new LatLng(33.3957792, -111.9230301);
+        dest = new LatLng(33.4193643, -111.9396468);
+        markerPoints.add(latLngcoffee);
+        markerPoints.add(dest);
+
+        getDirections();
 
         // Creating MarkerOptions
         MarkerOptions options = new MarkerOptions();
@@ -127,9 +138,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         MarkerOptions options2 = new MarkerOptions();
 
         // Setting the position of the marker
-        options.position(latLngsrc);
-        options1.position(latlngcoffee);
-        options2.position(latlngcoor);
+        options.position(src);
+        options1.position(latLngcoffee);
+        options2.position(dest);
 
         options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
         options1.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
@@ -138,18 +149,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mGoogleMap.addMarker(options);
         mGoogleMap.addMarker(options1);
         mGoogleMap.addMarker(options2);
-        showDialog();
+
 
     }
 
     private void showDialog(){
         new AlertDialog.Builder(MapActivity.this)
                 .setTitle("Time to reach destination")
-                .setMessage("Bike: " +   "\n" + "Walk: " +  "\n" + "Car: ")
+                .setMessage("Bike: " +   biketext + "\n" + "Walk: " +walktext)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        // continue with delete
-
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -161,6 +170,80 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     }
+
+    private void getDirections(){
+        Routing walkrouting = new Routing.Builder().travelMode(Routing.TravelMode.WALKING).withListener(walkingListener).waypoints(src, dest).build();
+
+        walkrouting.execute();
+
+        Routing bikerouting = new Routing.Builder().travelMode(Routing.TravelMode.BIKING).withListener(bikingListener).waypoints(src, dest).build();
+
+        bikerouting.execute();
+        //showDialog();
+
+    }
+
+
+    RoutingListener bikingListener = new RoutingListener() {
+        @Override
+        public void onRoutingFailure(RouteException e) {
+            Log.d("Subbu", "Bike Failure");
+            biketext = "Failed to get walking directions";
+        }
+
+        @Override
+        public void onRoutingStart() {
+
+        }
+
+        @Override
+        public void onRoutingSuccess(ArrayList<Route> arrayList, int i) {
+            Log.d("Subbu", "biking success");
+            if(arrayList.size() > 0){
+                Route route = arrayList.get(0);
+                biketext=route.getDurationText();
+                Toast.makeText(MapActivity.this, "Time to reach by bike  " + biketext, Toast.LENGTH_SHORT).show();
+            } else {
+                biketext= "There are no walking options available for this route";
+            }
+
+        }
+
+        @Override
+        public void onRoutingCancelled() {
+
+        }
+    };
+
+    RoutingListener walkingListener = new RoutingListener() {
+        @Override
+        public void onRoutingFailure(RouteException e) {
+            Log.d("Subbu", "Walking Failed");
+            walktext = "Failed to get walking directions";
+        }
+
+        @Override
+        public void onRoutingStart() {
+
+        }
+
+        @Override
+        public void onRoutingSuccess(ArrayList<Route> arrayList, int i) {
+            Log.d("Subbu", "Walking Success");
+            if(arrayList.size() > 0){
+                Route route = arrayList.get(0);
+                walktext=route.getDurationText();
+                Toast.makeText(MapActivity.this, "Time to reach by walk  " + walktext, Toast.LENGTH_SHORT).show();
+            } else {
+                walktext = "There are no walking options available for this route";
+            }
+        }
+
+        @Override
+        public void onRoutingCancelled() {
+
+        }
+    };
 
     private void gotoLocation(double lat, double lng) {
         LatLng ll = new LatLng(lat, lng);
