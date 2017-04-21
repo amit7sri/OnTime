@@ -14,6 +14,7 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin">
 
+
         <TextView
             android:id="@+id/class_tv"
             android:layout_width="wrap_content"
@@ -23,7 +24,7 @@
 
         <EditText
             android:id="@+id/classname"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/class_tv"
             android:textSize="@dimen/text_size" />
@@ -35,7 +36,8 @@
             android:layout_below="@id/class_tv"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:text="@string/setClassTime"
-            android:textSize="@dimen/text_size" />
+            android:textSize="@dimen/text_size"
+            android:gravity="center"/>
 
         <TimePicker
             android:id="@+id/timePicker"
@@ -54,17 +56,75 @@
             android:text="@string/preference"
             android:textSize="@dimen/text_size" />
 
+        <LinearLayout
+            android:layout_below="@+id/switchbutton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_margin="10dp"
+            android:id="@+id/checkboll">
+
+            <CheckBox
+                android:id="@+id/monday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="13dp"
+                android:text="M" />
+
+            <CheckBox
+                android:id="@+id/tuesday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="13dp"
+                android:text="T" />
+
+            <CheckBox
+                android:id="@+id/wednesday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="13dp"
+                android:text="W" />
+
+            <CheckBox
+                android:id="@+id/thursday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="13dp"
+                android:text="Th" />
+
+            <CheckBox
+                android:id="@+id/friday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="13dp"
+                android:text="F" />
+
+        </LinearLayout>
+
         <Button
             android:id="@+id/start_alarm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/switchbutton"
+            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/activity_vertical_margin"
             android:elevation="10dp"
             android:onClick="onSave"
             android:text="@string/save"
+            android:layout_below="@+id/checkboll"
             android:textAppearance="?android:textAppearanceLarge" />
-    </RelativeLayout>
 
+        <!--    Map button    <Button
+                    android:text="Alarm Off"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:textAppearanceLarge"
+                    android:layout_below="@+id/timePicker"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
+                    android:id="@+id/end_alarm"
+                    android:elevation="10dp" />-->
+
+    </RelativeLayout>
 </ScrollView>
