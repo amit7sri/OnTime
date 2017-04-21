@@ -155,6 +155,7 @@ public class LaunchActivity extends AppCompatActivity {
             items.add("Add Events by pressing Start Button");
         }
         mAdapter = new EventsListAdapter(items);
+        recyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
     }
 

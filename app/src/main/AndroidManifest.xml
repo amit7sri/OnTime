@@ -46,6 +46,10 @@
             android:enabled="true">
         </service>
 
+        <service android:name=".services.TimeCheckerService"
+            android:enabled="true">
+        </service>
+
         <meta-data android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyDnMjiJLQebnS29SmZTvA4f7gHSs5hT4Y4"/>
 

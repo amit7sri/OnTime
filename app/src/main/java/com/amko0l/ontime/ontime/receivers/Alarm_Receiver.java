@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.amko0l.ontime.ontime.services.RingtonePlayingService;
+import com.amko0l.ontime.ontime.services.TimeCheckerService;
 
 public class Alarm_Receiver extends BroadcastReceiver{
 
@@ -28,5 +29,9 @@ public class Alarm_Receiver extends BroadcastReceiver{
         //start ringtone service
         context.startService(service_intent);
 
+        Log.d("SAGAR","Calling TimeCheckerService");
+        Intent timer_intent = new Intent(context, TimeCheckerService.class);
+        context.startService(timer_intent);
+        Log.d("SAGAR","Calling TimeCheckerService done");
     }
 }
