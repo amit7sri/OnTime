@@ -8,13 +8,12 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.media.AudioManager;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by Lakshmisagar Kusnoor on 4/20/2017.
@@ -37,16 +36,27 @@ public class TimeCheckerService extends Service {
         this.context = this;
         this.isRunning = false;
 
-        Log.d("SAGAR","TimeCheckerService onCreate()");
-        Timer mTimer = new Timer();
-        mTimer.schedule(new TimerTask() {
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 AudioManager am =  (AudioManager) getSystemService(AUDIO_SERVICE);
                 am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                 isSet = true;
             }
-        }, 1000 * 30 * 1);
+        }, 30000);
+
+        /*Log.d("SAGAR","TimeCheckerService onCreate()");
+        final Timer mTimer = new Timer();
+        mTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+
+                AudioManager am =  (AudioManager) getSystemService(AUDIO_SERVICE);
+                am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                isSet = true;
+            }
+        }, 1000 * 20 * 1);*/
 
     }
 

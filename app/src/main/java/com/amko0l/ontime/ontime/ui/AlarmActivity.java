@@ -5,29 +5,24 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.amko0l.ontime.ontime.MainActivity;
 import com.amko0l.ontime.ontime.R;
 import com.amko0l.ontime.ontime.database.DataValues;
 import com.amko0l.ontime.ontime.database.OnTimeDB;
 import com.amko0l.ontime.ontime.receivers.Alarm_Receiver;
 
-import java.util.Calendar;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Created by Lakshmisagar on 4/14/2017.
@@ -219,10 +214,10 @@ public class AlarmActivity extends AppCompatActivity {
         //Intent alarm_intent = new Intent(context, Alarm_Receiver.class);
         alarm_intent.putExtra("extra", "Alarm on");
         pending_intent = PendingIntent.getBroadcast(AlarmActivity.this, 0, alarm_intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        alarm_manager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pending_intent);
+        alarm_manager.set(AlarmManager.RTC_WAKEUP, (calendar.getTimeInMillis() - (1000*60*30)), pending_intent);
         Switch switchButton = (Switch) findViewById(R.id.switchbutton);
 
-        DataValues eventData = new DataValues(classname, hour_string, minute_string, switchButton.isChecked());
+        DataValues eventData = new DataValues(classname, hour_string, minute_string, switchButton.isChecked(),list);
         Log.d("SAGAR", "ClassName :" + classname + " Alarm Time: " + hour_string + ":" + minute_string + "   Preference:" + switchButton.isChecked());
         OnTimeDB.insertIntoDB(sqLiteDatabase);
         super.onBackPressed();

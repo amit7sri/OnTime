@@ -13,14 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-       <!-- <ImageView
-            android:id="@+id/thumbnail"
-            android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:layout_alignParentTop="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/roundedbutton"/>-->
-
         <TextView
             android:id="@+id/title"
             android:layout_width="match_parent"
@@ -33,6 +25,21 @@
             android:textColor="#444"
             android:textSize="18dp"
             android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/daytime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="right"
+            android:layout_marginRight="12dp"
+            android:maxLines="3"
+            android:padding="8dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:textColor="#444"
+            android:textSize="18dp"
+            android:textStyle="bold"/>
+
 
     </RelativeLayout>
 </android.support.v7.widget.CardView>

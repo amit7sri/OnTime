@@ -13,10 +13,8 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.amko0l.ontime.ontime.MainActivity;
 import com.amko0l.ontime.ontime.R;
 import com.amko0l.ontime.ontime.ui.AlarmActivity;
-import com.amko0l.ontime.ontime.ui.MapActivity;
 
 
 public class RingtonePlayingService extends Service {
@@ -56,7 +54,7 @@ public class RingtonePlayingService extends Service {
 
         //make the notification parameter
         Notification notification_popup = new Notification.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.mipmap.logo_main)
                 .setContentTitle("Alarm is going off")
                 .setContentText("click me!")
                 .setContentIntent(pending_intent_main_activity)

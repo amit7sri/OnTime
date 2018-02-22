@@ -23,7 +23,7 @@ public class NaiveBayes {
     float Pclear_yes = 1/4;
     float Prainy_yes = 3/4;
 
-    boolean isCoofee(int outcast, int location, int time){
+    public boolean isCoofee(int outcast, int location, int time){
         float yes;
         float no;
 

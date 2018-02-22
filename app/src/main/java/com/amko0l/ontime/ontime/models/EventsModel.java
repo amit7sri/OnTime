@@ -6,6 +6,7 @@ package com.amko0l.ontime.ontime.models;
 
 public class EventsModel {
     private String title;
+    private String detail;
 
     public String getTitle() {
         return title;
@@ -15,4 +16,11 @@ public class EventsModel {
         this.title = title;
     }
 
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
+    }
 }

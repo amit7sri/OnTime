@@ -127,6 +127,7 @@
                 android:layout_height="wrap_content"
                 android:elevation="10dp"
                 android:text="Show Map"
+                android:visibility="visible"
                 android:textAppearance="?android:textAppearanceLarge" />
         </LinearLayout>
 

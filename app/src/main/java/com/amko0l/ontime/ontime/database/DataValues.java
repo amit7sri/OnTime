@@ -1,5 +1,7 @@
 package com.amko0l.ontime.ontime.database;
 
+import java.util.ArrayList;
+
 /**
  * Created by Lakshmisagar on 4/19/2017.
  */
@@ -15,12 +17,14 @@ public class DataValues {
     static String hour;
     static String minutes;
     static boolean coffee;
+    static ArrayList<Integer>  list;
 
-    public DataValues(String classname,String hour, String min, boolean preference){
+    public DataValues(String classname, String hour, String min, boolean preference, ArrayList<Integer> list){
         this.className = classname;
         this.hour = hour;
         this.minutes = min;
         this.coffee = preference;
+        this.list = list;
     }
 
     public DataValues(){
@@ -58,6 +62,15 @@ public class DataValues {
     public void setPreference(boolean pref) {
         this.coffee = pref;
     }
+
+    public static ArrayList<Integer> getList() {
+        return list;
+    }
+
+    public void setList(ArrayList<Integer> list) {
+        this.list = list;
+    }
+
 
 
 

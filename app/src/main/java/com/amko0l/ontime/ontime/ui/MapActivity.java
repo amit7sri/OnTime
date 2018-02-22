@@ -3,27 +3,21 @@ package com.amko0l.ontime.ontime.ui;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amko0l.ontime.ontime.R;
 import com.amko0l.ontime.ontime.database.DataValues;
+import com.amko0l.ontime.ontime.learning.NaiveBayes;
 import com.directions.route.Route;
 import com.directions.route.RouteException;
 import com.directions.route.Routing;
@@ -43,10 +37,9 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
-import java.util.StringTokenizer;
 
 
 
@@ -77,7 +70,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         } else {
             Toast.makeText(this, "Can't connect to play services ", Toast.LENGTH_LONG).show();
         }
+
     }
+
 
     private void initMap() {
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.mapfragment);
@@ -126,7 +121,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         markerPoints.add(src);
 
         latLngcoffee = new LatLng(33.3957792, -111.9230301);
-        dest = new LatLng(33.4193643, -111.9396468);
+        dest = new LatLng(33.4188716, -111.9347489);
         markerPoints.add(latLngcoffee);
         markerPoints.add(dest);
 
@@ -147,7 +142,25 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         options2.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
 
         mGoogleMap.addMarker(options);
-        mGoogleMap.addMarker(options1);
+        NaiveBayes nb = new NaiveBayes();
+        ArrayList<Integer> svmlist = new ArrayList<>();
+        svmlist.add(0); //home location
+        Calendar rightNow = Calendar.getInstance();
+        int hour = rightNow.get(Calendar.HOUR_OF_DAY);
+        int time = 0;
+        if(hour<12)
+            time = 0;
+        else if(hour>12 && hour <4)
+            time = 1;
+        else
+            time = 2;
+        //0 for clear weather, 1 for rainy
+        //0 for home location, 1 for away
+        if(nb.isCoofee(1, 0, time)) {
+            Toast.makeText(this, "Enjoy coffee on the way, you will reach your destination on time",Toast.LENGTH_LONG).show();
+            mGoogleMap.addMarker(options1);
+        }else
+            Toast.makeText(this, "Hurry up for the class",Toast.LENGTH_LONG).show();
         mGoogleMap.addMarker(options2);
 
 

@@ -13,11 +13,12 @@ public class GlobalConstants {
     static String DestLng = "DestLongitude";
     static String Preference = "Preference";
     static String ClassName = "className";
+    static String Days = "Days";
 
     static String CREATE_TABLE = "CREATE TABLE IF NOT EXISTS "+
             TableName +"(" + Col_ID +" INTEGER PRIMARY KEY AUTOINCREMENT, "
             + Hour + " TEXT, " + DestLat + " TEXT ,"+ ClassName + " TEXT, " + DestLng + " TEXT," + Preference + " TEXT, "
-            + Minute + " TEXT );";
+            + Minute +" TEXT, "+ Days + " TEXT );";
 
     static String DELETE_TABLE =  "DROP TABLE IF EXISTS " +TableName;
     static String CHECK_TABLE = "SELECT name FROM sqlite_master WHERE type='table' AND name ="+TableName;
